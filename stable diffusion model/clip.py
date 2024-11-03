@@ -25,7 +25,32 @@ class CLIPLayer(nn.Module):
 
         self.layernorm_1 = nn.LayerNorm(n_embed)
         self.attention = SelfAttention(n_head, n_embed)
-        
+        self.layernorm_2 = nn.LayerNorm(n_embed)
+        self.linear1 = nn.Linear(n_embed, 4 * n_embed)
+        self.linear2 = nn.Linear(4 * n_embed, n_embed)
+
+    def forward(self, x : torch.Tensor) -> torch.Tensor:
+
+        residue = x
+
+        x = self.layernorm_1(x)
+
+        x = self.attention(x, causal_mask = True)
+
+        x += residue
+
+        x = self.layernorm_2(x)
+
+        x = self.linear1(x)
+
+        x = x * torch.sigmoid(1.702 * x) #QuickGELU Activation Function
+
+        x = self.linear2(x)
+
+        x += residue
+
+        return x
+
 
 class CLIP(nn.Module):
 
