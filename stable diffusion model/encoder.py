@@ -13,7 +13,7 @@ class VAE_Encoder(nn.Sequential):
             
             VAE_ResidualBlock(128, 128), #another residual block, does not change
             
-            nn.Conv2d(128, 128, kernel = 3, stride = 2, padding = 0), #visualise this convolution and others on https://ezyang.github.io/convolution-visualizer/index.html
+            nn.Conv2d(128, 128, kernel_size = 3, stride = 2, padding = 0), #visualise this convolution and others on https://ezyang.github.io/convolution-visualizer/index.html
             #in the above convolution, dimensions remain the same, except the height and width are both halved. this reduces the size, considerably reducing computations.
             
             VAE_ResidualBlock(128, 256), #dimension changes from (batches, 128, height / 2, width / 2) -> (batches, 256, height / 2, width / 2)
@@ -69,3 +69,4 @@ class VAE_Encoder(nn.Sequential):
         x *= 0.18215
 
         return x
+            
